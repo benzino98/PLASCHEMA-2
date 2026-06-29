@@ -3,10 +3,13 @@ import { animate } from 'motion';
 import ApexCharts from 'apexcharts';
 import { Notyf } from 'notyf';
 import Swal from 'sweetalert2';
+import { createIcons, icons } from 'lucide';
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
 window.animate = animate;
+
+window.refreshIcons = () => createIcons({ icons });
 
 window.notyf = new Notyf({
     duration: 4000,
@@ -30,4 +33,8 @@ window.Swal = Swal.mixin({
     cancelButtonColor: '#64748b',
 });
 
+document.addEventListener('alpine:initialized', () => window.refreshIcons());
+
 Alpine.start();
+
+window.refreshIcons();

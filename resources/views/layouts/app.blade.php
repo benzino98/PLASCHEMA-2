@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name')) — {{ config('app.name', 'PLASCHEMA') }}</title>
+    <title>@hasSection('title')@yield('title') — @endif{{ config('app.name', 'PLASCHEMA') }}</title>
     <meta name="description" content="@yield('meta_description', 'Affordable healthcare for every Plateau citizen. Plateau State Contributory Healthcare Management Agency.')">
 
     @fonts

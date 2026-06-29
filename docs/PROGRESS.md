@@ -4,8 +4,8 @@
 > Plan reference: [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)  
 > Last updated: 2026-06-29
 
-**Overall status:** Phase 0 complete  
-**Current phase:** Phase 1 — Design System & Global Layout  
+**Overall status:** Phase 1 complete  
+**Current phase:** Phase 2 — Public Pages  
 **Target v1 launch:** TBD
 
 ---
@@ -43,17 +43,17 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Master layout (`layouts/app.blade.php`) | | |
-| ⬜ | Header + desktop navigation | | |
-| ⬜ | Mobile navigation (animated) | | |
-| ⬜ | Footer (links, newsletter, emergency, social, legal) | | |
-| ⬜ | Reusable components: buttons, cards, CTAs, stat cards | | Partial: btn/card classes in app.css |
-| ⬜ | Breadcrumbs component | | |
-| ⬜ | Accordion component (FAQs) | | |
-| ⬜ | Admin layout shell | | |
-| ⬜ | Responsive smoke test (mobile / tablet / desktop) | | |
+| ✅ | Master layout (`layouts/app.blade.php`) | | |
+| ✅ | Header + desktop navigation | | 8 nav items per PRD |
+| ✅ | Mobile navigation (animated) | | Alpine.js slide-in panel |
+| ✅ | Footer (links, newsletter, emergency, social) | | No legal pages (per decision) |
+| ✅ | Reusable components: buttons, cards, CTAs, stat cards | | + plan-card component |
+| ✅ | Breadcrumbs component | | `components/breadcrumbs` |
+| ✅ | Accordion component (FAQs) | | Alpine.js toggle |
+| ✅ | Admin layout shell | | `layouts/admin.blade.php` + `/admin` |
+| ✅ | Responsive smoke test (mobile / tablet / desktop) | | Feature tests + build pass |
 
-**Phase 1 progress:** 0 / 9
+**Phase 1 progress:** 9 / 9 ✅
 
 ---
 
@@ -269,7 +269,7 @@
 | Date | Update |
 |------|--------|
 | 2026-06-29 | Created progress tracker from PRD v1.0 |
-| 2026-06-29 | Phase 0 complete — Laravel, Tailwind v4, design tokens, CI/CD skeleton |
+| 2026-06-29 | Phase 1 complete — layouts, nav, footer, components, admin shell |
 
 ---
 
@@ -278,7 +278,7 @@
 | Phase | Done | Total | % |
 |-------|------|-------|---|
 | 0 — Foundation | 8 | 8 | 100% |
-| 1 — Design System | 0 | 9 | 0% |
+| 1 — Design System | 9 | 9 | 100% |
 | 2 — Public Pages | 0 | 24 | 0% |
 | 3 — Providers | 0 | 7 | 0% |
 | 4 — Admin CMS | 0 | 12 | 0% |
@@ -287,4 +287,4 @@
 | 7 — API | 0 | 6 | 0% |
 | 8 — QA & A11y | 0 | 8 | 0% |
 | 9 — Deployment | 0 | 7 | 0% |
-| **Total** | **8** | **93** | **9%** |
+| **Total** | **17** | **93** | **18%** |
