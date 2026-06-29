@@ -19,6 +19,7 @@ return [
         ['label' => 'Find a Provider', 'route' => 'providers'],
         ['label' => 'News & Updates', 'route' => 'news'],
         ['label' => 'Downloads', 'route' => 'resources'],
+        ['label' => 'FAQs', 'route' => 'faqs'],
         ['label' => 'Contact', 'route' => 'contact'],
     ],
 

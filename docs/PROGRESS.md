@@ -4,8 +4,8 @@
 > Plan reference: [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)  
 > Last updated: 2026-06-29
 
-**Overall status:** Phase 1 complete  
-**Current phase:** Phase 2 — Public Pages  
+**Overall status:** Phase 2 complete  
+**Current phase:** Phase 3 — Provider Directory  
 **Target v1 launch:** TBD
 
 ---
@@ -62,59 +62,59 @@
 ### Home
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Hero section (image, headline, 4 CTAs) | | |
-| ⬜ | Health Plans teaser section | | |
-| ⬜ | Statistics section (ApexCharts) | | |
-| ⬜ | Why Choose PLASCHEMA section | | |
-| ⬜ | Success Stories section | | |
-| ⬜ | News preview section | | |
-| ⬜ | FAQs preview section | | |
-| ⬜ | Bottom call-to-action section | | |
+| ✅ | Hero section (image, headline, 4 CTAs) | | Gradient + background image |
+| ✅ | Health Plans teaser section | | From database |
+| ✅ | Statistics section (ApexCharts) | | Enrollment growth chart |
+| ✅ | Why Choose PLASCHEMA section | | 4 feature cards |
+| ✅ | Success Stories section | | 3 seeded stories |
+| ✅ | News preview section | | Latest 3 articles |
+| ✅ | FAQs preview section | | Accordion with 4 FAQs |
+| ✅ | Bottom call-to-action section | | Gradient CTA band |
 
 ### About
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Mission, Vision, Objectives | | |
-| ⬜ | Director General profile | | |
-| ⬜ | Organogram | | |
-| ⬜ | History section | | |
-| ⬜ | Photo gallery (LightGallery) | | |
+| ✅ | Mission, Vision, Objectives | | Page sections in DB |
+| ✅ | Director General profile | | Placeholder — replace with real bio |
+| ✅ | Organogram | | Structural placeholder |
+| ✅ | History section | | Timeline from DB |
+| ✅ | Photo gallery (LightGallery) | | 6 images with lightbox |
 
 ### Health Insurance Plans
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Plan pricing cards (5 plan types) | | |
-| ⬜ | Benefits comparison table | | |
-| ⬜ | Mobile-responsive table scroll | | |
+| ✅ | Plan pricing cards (5 plan types) | | All 5 plans seeded |
+| ✅ | Benefits comparison table | | `x-benefits-table` component |
+| ✅ | Mobile-responsive table scroll | | Horizontal scroll on mobile |
 
 ### News
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | News listing with categories | | |
-| ⬜ | Article detail page | | |
-| ⬜ | Pagination | | |
+| ✅ | News listing with categories | | Filter pills + pagination |
+| ✅ | Article detail page | | `/news/{slug}` |
+| ✅ | Pagination | | Laravel paginator |
 
 ### Downloads (Resources)
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Categorized download listing | | |
-| ⬜ | File download action | | |
+| ✅ | Categorized download listing | | Grouped by category |
+| ✅ | File download action | | `/resources/{slug}/download` |
 
 ### FAQs
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Category grouping | | |
-| ⬜ | Search functionality | | |
-| ⬜ | Accordion UI | | |
+| ✅ | Category grouping | | 4 categories seeded |
+| ✅ | Search functionality | | Alpine.js client-side filter |
+| ✅ | Accordion UI | | Per-question toggle |
 
 ### Contact
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Google Map embed | | |
-| ⬜ | Contact form + validation | | |
-| ⬜ | Office info, hotlines, email, social | | |
+| ✅ | Google Map embed | | Jos, Plateau State embed |
+| ✅ | Contact form + validation | | Stores to `contact_messages` |
+| ✅ | Office info, hotlines, email, social | | From config |
 
-**Phase 2 progress:** 0 / 24
+**Phase 2 progress:** 24 / 24 ✅
 
 ---
 
@@ -269,7 +269,7 @@
 | Date | Update |
 |------|--------|
 | 2026-06-29 | Created progress tracker from PRD v1.0 |
-| 2026-06-29 | Phase 1 complete — layouts, nav, footer, components, admin shell |
+| 2026-06-29 | Phase 2 complete — all public pages, DB content, contact form, downloads |
 
 ---
 
@@ -279,7 +279,7 @@
 |-------|------|-------|---|
 | 0 — Foundation | 8 | 8 | 100% |
 | 1 — Design System | 9 | 9 | 100% |
-| 2 — Public Pages | 0 | 24 | 0% |
+| 2 — Public Pages | 24 | 24 | 100% |
 | 3 — Providers | 0 | 7 | 0% |
 | 4 — Admin CMS | 0 | 12 | 0% |
 | 5 — Digital Services | 0 | 6 | 0% |
@@ -287,4 +287,4 @@
 | 7 — API | 0 | 6 | 0% |
 | 8 — QA & A11y | 0 | 8 | 0% |
 | 9 — Deployment | 0 | 7 | 0% |
-| **Total** | **17** | **93** | **18%** |
+| **Total** | **41** | **93** | **44%** |

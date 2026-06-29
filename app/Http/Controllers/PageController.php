@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
-use App\Models\FaqCategory;
 use App\Models\HealthPlan;
 use App\Models\NewsArticle;
+use App\Models\Page;
+use App\Models\SiteSetting;
 use App\Models\SuccessStory;
 use Illuminate\View\View;
 

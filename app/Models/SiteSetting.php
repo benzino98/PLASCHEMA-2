@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
 
 class SiteSetting extends Model
 {
@@ -11,6 +12,10 @@ class SiteSetting extends Model
 
     public static function get(string $group, string $key, mixed $default = null): mixed
     {
+        if (! Schema::hasTable('site_settings')) {
+            return $default;
+        }
+
         $setting = Cache::rememberForever("setting.{$group}.{$key}", function () use ($group, $key) {
             return static::query()->where('group', $group)->where('key', $key)->value('value');
         });

@@ -18,7 +18,7 @@
                 <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary-50">
                     <i data-lucide="construction" class="h-7 w-7 text-primary"></i>
                 </div>
-                <h2 class="text-xl font-semibold text-slate-900">Coming in Phase 2</h2>
+                <h2 class="text-xl font-semibold text-slate-900">Coming in Phase {{ $phase ?? 2 }}</h2>
                 <p class="mt-2 text-slate-600">
                     This page will be built out with full content in the next phase. The layout, navigation, and design system are ready.
                 </p>

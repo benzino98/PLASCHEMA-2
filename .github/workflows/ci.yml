@@ -65,6 +65,9 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Seed database
+        run: php artisan db:seed --force
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:

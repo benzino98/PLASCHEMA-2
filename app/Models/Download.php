@@ -55,4 +55,9 @@ class Download extends Model
     {
         return Storage::disk('public')->exists($this->file_path);
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

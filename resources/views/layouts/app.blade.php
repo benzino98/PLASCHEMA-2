@@ -24,6 +24,14 @@
 
     @include('partials.footer')
 
+    @if (session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                window.notyf?.success(@json(session('success')));
+            });
+        </script>
+    @endif
+
     @stack('scripts')
 </body>
 </html>

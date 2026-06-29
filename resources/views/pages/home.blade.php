@@ -4,33 +4,30 @@
 
 @section('content')
     {{-- Hero --}}
-    <section class="page-hero">
-        <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary to-secondary/80"></div>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80')] bg-cover bg-center opacity-20 mix-blend-overlay"></div>
+        <div class="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-32">
             <div class="mx-auto max-w-3xl text-center">
-                <p class="text-sm font-semibold uppercase tracking-wider text-primary">Plateau State Healthcare</p>
-                <h1 class="mt-4 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-                    Affordable Healthcare For Every
-                    <span class="text-primary">Plateau Citizen</span>
+                <p class="text-sm font-semibold uppercase tracking-wider text-white/80">Plateau State Healthcare</p>
+                <h1 class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                    Affordable Healthcare For Every Plateau Citizen
                 </h1>
-                <p class="mt-6 text-lg leading-relaxed text-slate-600">
+                <p class="mt-6 text-lg leading-relaxed text-white/90">
                     Enroll in PLASCHEMA, verify your membership, find accredited providers, and access quality healthcare across Plateau State.
                 </p>
                 <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-                    <a href="{{ config('plaschema.services.enrollment') }}" class="btn-primary" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="user-plus" class="h-4 w-4"></i>
-                        Enroll Now
+                    <a href="{{ config('plaschema.services.enrollment') }}" class="inline-flex items-center gap-2 rounded-[var(--radius-button)] bg-white px-6 py-3 text-sm font-semibold text-primary shadow-lg transition hover:bg-slate-50" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="user-plus" class="h-4 w-4"></i> Enroll Now
                     </a>
-                    <a href="{{ config('plaschema.services.verification') }}" class="btn-secondary" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="shield-check" class="h-4 w-4"></i>
-                        Verify Enrollment
+                    <a href="{{ config('plaschema.services.verification') }}" class="inline-flex items-center gap-2 rounded-[var(--radius-button)] border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="shield-check" class="h-4 w-4"></i> Verify Enrollment
                     </a>
-                    <a href="{{ route('providers') }}" class="btn-outline">
-                        <i data-lucide="map-pin" class="h-4 w-4"></i>
-                        Find Hospital
+                    <a href="{{ route('providers') }}" class="inline-flex items-center gap-2 rounded-[var(--radius-button)] border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10">
+                        <i data-lucide="map-pin" class="h-4 w-4"></i> Find Hospital
                     </a>
-                    <a href="{{ config('plaschema.services.payment') }}" class="btn-outline" target="_blank" rel="noopener noreferrer">
-                        <i data-lucide="credit-card" class="h-4 w-4"></i>
-                        Renew Membership
+                    <a href="{{ config('plaschema.services.payment') }}" class="inline-flex items-center gap-2 rounded-[var(--radius-button)] border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10" target="_blank" rel="noopener noreferrer">
+                        <i data-lucide="credit-card" class="h-4 w-4"></i> Renew Membership
                     </a>
                 </div>
             </div>
@@ -40,53 +37,84 @@
     {{-- Statistics --}}
     <x-section title="PLASCHEMA at a Glance" subtitle="Impact" centered class="bg-white">
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <x-stat-card value="500K+" label="Enrolled Citizens" icon="users" trend="Growing every month" />
-            <x-stat-card value="200+" label="Accredited Providers" icon="building-2" />
-            <x-stat-card value="17" label="LGAs Covered" icon="map" />
-            <x-stat-card value="24/7" label="Support Available" icon="headphones" />
+            @foreach ($stats as $stat)
+                <x-stat-card :value="$stat['value']" :label="$stat['label']" :icon="$stat['icon'] ?? null" />
+            @endforeach
+        </div>
+        <div class="mt-10 card">
+            <h3 class="text-lg font-semibold text-slate-900">Enrollment Growth</h3>
+            <p class="mt-1 text-sm text-slate-500">Total enrolled citizens over time</p>
+            <div id="enrollment-chart" class="mt-6" style="min-height: 320px;"></div>
         </div>
     </x-section>
 
-    {{-- Health plans preview --}}
-    <x-section title="Health Insurance Plans" subtitle="Coverage Options" centered class="bg-surface">
+    {{-- Why PLASCHEMA --}}
+    <x-section title="Why Choose PLASCHEMA" subtitle="Our Promise" centered class="bg-surface">
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            @foreach ($whyPlaschema as $item)
+                <div class="card-hover text-center">
+                    <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary">
+                        <i data-lucide="{{ $item['icon'] }}" class="h-6 w-6"></i>
+                    </div>
+                    <h3 class="font-semibold text-slate-900">{{ $item['title'] }}</h3>
+                    <p class="mt-2 text-sm text-slate-500">{{ $item['description'] }}</p>
+                </div>
+            @endforeach
+        </div>
+    </x-section>
+
+    {{-- Health Plans teaser --}}
+    <x-section title="Health Insurance Plans" subtitle="Coverage Options" centered class="bg-white">
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <x-plan-card
-                name="Formal Sector"
-                price="Employer-backed"
-                description="For civil servants and organized private sector employees."
-                :features="['Comprehensive outpatient care', 'Inpatient services', 'Maternity coverage', 'Annual health screening']"
-            />
-            <x-plan-card
-                name="Informal Sector"
-                price="From ₦12,000/yr"
-                description="Flexible coverage for traders, artisans, and self-employed citizens."
-                :features="['Primary healthcare access', 'Essential drugs', 'Emergency care', 'Referral services']"
-                :highlighted="true"
-            />
-            <x-plan-card
-                name="Family Plan"
-                price="Per household"
-                description="Protect your entire family under one affordable package."
-                :features="['Spouse & children covered', 'Pediatric care', 'Immunization', 'Family planning']"
-            />
+            @foreach ($plans as $plan)
+                <x-plan-card
+                    :name="$plan->name"
+                    :price="$plan->price_label"
+                    :description="$plan->description"
+                    :highlighted="$plan->is_featured"
+                />
+            @endforeach
         </div>
         <div class="mt-10 text-center">
-            <a href="{{ route('health-plans') }}" class="btn-outline">View All Plans</a>
+            <a href="{{ route('health-plans') }}" class="btn-outline">View All Plans &amp; Benefits</a>
         </div>
     </x-section>
+
+    {{-- Success Stories --}}
+  @if ($stories->isNotEmpty())
+        <x-section title="Success Stories" subtitle="Real Impact" centered class="bg-surface">
+            <div class="grid gap-6 md:grid-cols-3">
+                @foreach ($stories as $story)
+                    <x-story-card :story="$story" />
+                @endforeach
+            </div>
+        </x-section>
+    @endif
+
+    {{-- News preview --}}
+    @if ($latestNews->isNotEmpty())
+        <x-section title="Latest News" subtitle="Updates" centered class="bg-white">
+            <div class="grid gap-6 md:grid-cols-3">
+                @foreach ($latestNews as $article)
+                    <x-news-card :article="$article" />
+                @endforeach
+            </div>
+            <div class="mt-10 text-center">
+                <a href="{{ route('news') }}" class="btn-outline">View All News</a>
+            </div>
+        </x-section>
+    @endif
 
     {{-- FAQ preview --}}
-    <x-section title="Frequently Asked Questions" subtitle="Help Center" centered class="bg-white">
+    <x-section title="Frequently Asked Questions" subtitle="Help Center" centered class="bg-surface">
         <div class="mx-auto max-w-3xl">
-            <x-accordion :items="[
-                ['question' => 'Who is eligible for PLASCHEMA?', 'answer' => 'All residents of Plateau State are eligible, including formal and informal sector workers, students, families, and vulnerable persons under the BHCPF equity program.'],
-                ['question' => 'How do I enroll?', 'answer' => 'Visit our online enrollment portal, complete the registration form, choose your plan, and pay your premium. You can also visit any PLASCHEMA office for assistance.'],
-                ['question' => 'How do I find an accredited hospital?', 'answer' => 'Use the Find Healthcare Provider page to search by LGA, specialty, or hospital name. You can also view providers on an interactive map.'],
-            ]" />
+            <x-accordion :items="$faqs->map(fn ($f) => ['question' => $f->question, 'answer' => $f->answer])->values()->all()" />
+            <div class="mt-8 text-center">
+                <a href="{{ route('faqs') }}" class="text-sm font-semibold text-primary hover:text-primary-700">View all FAQs &rarr;</a>
+            </div>
         </div>
     </x-section>
 
-    {{-- CTA --}}
     <x-cta
         title="Ready to Get Covered?"
         description="Join thousands of Plateau citizens already enjoying affordable, quality healthcare through PLASCHEMA."
@@ -98,3 +126,24 @@
         variant="gradient"
     />
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chartData = @json($chartData);
+        if (chartData.labels && document.querySelector('#enrollment-chart')) {
+            new ApexCharts(document.querySelector('#enrollment-chart'), {
+                chart: { type: 'area', height: 320, toolbar: { show: false }, fontFamily: 'Inter, sans-serif' },
+                series: [{ name: 'Enrolled Citizens', data: chartData.series }],
+                xaxis: { categories: chartData.labels },
+                colors: ['#0B8F4D'],
+                fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05 } },
+                stroke: { curve: 'smooth', width: 2 },
+                dataLabels: { enabled: false },
+                grid: { borderColor: '#f1f5f9' },
+                yaxis: { labels: { formatter: (v) => v >= 1000 ? (v/1000) + 'K' : v } },
+            }).render();
+        }
+    });
+</script>
+@endpush
