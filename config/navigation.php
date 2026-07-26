@@ -6,7 +6,7 @@ return [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'About', 'route' => 'about'],
         ['label' => 'Health Plans', 'route' => 'health-plans'],
-        ['label' => 'Enroll', 'url' => 'plaschema.services.enrollment', 'external' => true],
+        ['label' => 'Services', 'route' => 'services'],
         ['label' => 'Providers', 'route' => 'providers'],
         ['label' => 'News', 'route' => 'news'],
         ['label' => 'Resources', 'route' => 'resources'],
@@ -15,6 +15,7 @@ return [
 
     'footer_quick' => [
         ['label' => 'About Us', 'route' => 'about'],
+        ['label' => 'Digital Services', 'route' => 'services'],
         ['label' => 'Health Plans', 'route' => 'health-plans'],
         ['label' => 'Find a Provider', 'route' => 'providers'],
         ['label' => 'News & Updates', 'route' => 'news'],

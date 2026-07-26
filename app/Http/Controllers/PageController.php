@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Admin\HomeSettingController;
 use App\Models\Faq;
 use App\Models\HealthPlan;
 use App\Models\NewsArticle;
 use App\Models\Page;
 use App\Models\SiteSetting;
 use App\Models\SuccessStory;
+use App\Support\DigitalServices;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -15,9 +17,11 @@ class PageController extends Controller
     public function home(): View
     {
         return view('pages.home', [
+            'hero' => SiteSetting::get('home', 'hero', HomeSettingController::defaultHero()),
             'stats' => SiteSetting::get('home', 'stats', []),
             'chartData' => SiteSetting::get('home', 'enrollment_chart', []),
             'whyPlaschema' => SiteSetting::get('home', 'why_plaschema', []),
+            'services' => DigitalServices::all(),
             'plans' => HealthPlan::query()->orderBy('sort_order')->take(3)->get(),
             'stories' => SuccessStory::published()->take(3)->get(),
             'latestNews' => NewsArticle::published()->latest('published_at')->take(3)->get(),
@@ -28,6 +32,11 @@ class PageController extends Controller
                 ->take(4)
                 ->get(),
         ]);
+    }
+
+    public function services(): View
+    {
+        return view('pages.services', ['services' => DigitalServices::all()]);
     }
 
     public function about(): View
@@ -43,14 +52,5 @@ class PageController extends Controller
         $benefitRows = $plans->first()?->benefits ?? collect();
 
         return view('pages.health-plans', compact('plans', 'benefitRows'));
-    }
-
-    public function providers(): View
-    {
-        return view('pages.placeholder', [
-            'title' => 'Find Healthcare Provider',
-            'description' => 'Search accredited hospitals and clinics across Plateau State.',
-            'phase' => 3,
-        ]);
     }
 }

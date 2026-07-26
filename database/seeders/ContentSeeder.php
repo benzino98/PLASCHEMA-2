@@ -12,6 +12,7 @@ use App\Models\PageSection;
 use App\Models\PlanBenefit;
 use App\Models\SiteSetting;
 use App\Models\SuccessStory;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -27,10 +28,18 @@ class ContentSeeder extends Seeder
         $this->seedDownloads();
         $this->seedAboutPage();
         $this->seedSuccessStories();
+        $this->seedUsers();
     }
 
     private function seedSiteSettings(): void
     {
+        SiteSetting::set('home', 'hero', [
+            'eyebrow' => 'Plateau State Healthcare',
+            'title' => 'Affordable Healthcare For Every Plateau Citizen',
+            'description' => 'Enroll in PLASCHEMA, verify your membership, find accredited providers, and access quality healthcare across Plateau State.',
+            'background_image' => 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1600&q=80',
+        ]);
+
         SiteSetting::set('home', 'stats', [
             ['label' => 'Enrolled Citizens', 'value' => '500K+', 'icon' => 'users'],
             ['label' => 'Accredited Providers', 'value' => '200+', 'icon' => 'building-2'],
@@ -302,5 +311,26 @@ class ContentSeeder extends Seeder
                 'sort_order' => $i + 1,
             ]);
         }
+    }
+
+    private function seedUsers(): void
+    {
+        User::updateOrCreate(
+            ['email' => 'admin@plaschema.gov.ng'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'editor@plaschema.gov.ng'],
+            [
+                'name' => 'Editor User',
+                'password' => bcrypt('password'),
+                'role' => 'editor',
+            ]
+        );
     }
 }

@@ -20,10 +20,10 @@
 
         {{-- Desktop CTA --}}
         <div class="hidden items-center gap-3 lg:flex">
-            <a href="{{ config('plaschema.services.verification') }}" class="text-sm font-medium text-slate-600 transition hover:text-primary" target="_blank" rel="noopener noreferrer">
+            <a href="{{ \App\Support\DigitalServices::url('verification') }}" class="text-sm font-medium text-slate-600 transition hover:text-primary" target="_blank" rel="noopener noreferrer">
                 Verify
             </a>
-            <a href="{{ config('plaschema.services.enrollment') }}" class="btn-primary !px-4 !py-2 text-xs" target="_blank" rel="noopener noreferrer">
+            <a href="{{ \App\Support\DigitalServices::url('enrollment') }}" class="btn-primary !px-4 !py-2 text-xs" target="_blank" rel="noopener noreferrer">
                 Enroll Now
             </a>
         </div>

@@ -53,10 +53,10 @@
             <div class="lg:col-span-2">
                 <p class="text-sm font-semibold text-white">Digital Services</p>
                 <ul class="mt-4 space-y-2">
-                    @foreach (config('navigation.footer_services') as $link)
+                    @foreach (\App\Support\DigitalServices::all() as $service)
                         <li>
-                            <a href="{{ config($link['url']) }}" class="text-sm text-slate-400 transition hover:text-white" target="_blank" rel="noopener noreferrer">
-                                {{ $link['label'] }}
+                            <a href="{{ $service['url'] }}" class="text-sm text-slate-400 transition hover:text-white" target="_blank" rel="noopener noreferrer">
+                                {{ $service['title'] }}
                             </a>
                         </li>
                     @endforeach

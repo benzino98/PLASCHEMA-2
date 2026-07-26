@@ -2,10 +2,10 @@
 
 > Update this file as tasks are completed.  
 > Plan reference: [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)  
-> Last updated: 2026-06-29
+> Last updated: 2026-07-26
 
-**Overall status:** Phase 2 complete  
-**Current phase:** Phase 3 — Provider Directory  
+**Overall status:** Phase 5 complete  
+**Current phase:** Phase 6 — AI Assistant  
 **Target v1 launch:** TBD
 
 ---
@@ -122,15 +122,15 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | `healthcare_providers` migration + model | | |
-| ⬜ | Provider search page with filters | | |
-| ⬜ | List view | | |
-| ⬜ | Map view (Google Maps API) | | |
-| ⬜ | Provider detail page | | |
-| ⬜ | Seed data (≥10 providers) | | |
-| ⬜ | Admin CRUD for providers | | |
+| ✅ | `healthcare_providers` migration + model | | + photos table |
+| ✅ | Provider search page with filters | | LGA, name, specialty, ownership, service |
+| ✅ | List view | | Card grid with accreditation badges |
+| ✅ | Map view (Google Maps API) | | Interactive markers when API key set; embed fallback |
+| ✅ | Provider detail page | | Contact, services, map, related providers |
+| ✅ | Seed data (≥10 providers) | | 12 providers across 8 LGAs |
+| ✅ | Admin CRUD for providers | | `/admin/providers` create/edit/delete |
 
-**Phase 3 progress:** 0 / 7
+**Phase 3 progress:** 7 / 7 ✅
 
 ---
 
@@ -138,20 +138,20 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Admin authentication (Sanctum / web guard) | | |
-| ⬜ | Role-based access (admin, editor) | | |
-| ⬜ | Dashboard with summary stats | | |
-| ⬜ | Manage pages (About content) | | |
-| ⬜ | Manage health plans | | |
-| ⬜ | Manage news articles (Tiptap) | | |
-| ⬜ | Manage downloads (FilePond) | | |
-| ⬜ | Manage FAQs | | |
-| ⬜ | Manage home settings (hero, stats) | | |
-| ⬜ | Contact message inbox | | |
-| ⬜ | User management (admin only) | | |
-| ⬜ | Grid.js data tables in admin | | |
+| ✅ | Admin authentication (Sanctum / web guard) | | Laravel web guard + session auth, login/logout flow |
+| ✅ | Role-based access (admin, editor) | | `role` column + `EnsureUserHasRole` middleware + helper methods |
+| ✅ | Dashboard with summary stats | | 8 stat cards, ApexCharts enrollment graph, recent activity feeds |
+| ✅ | Manage pages (About content) | | Structured mission, vision, objectives, DG profile, history, and gallery editor |
+| ✅ | Manage health plans | | CRUD with transactional repeatable benefit management |
+| ✅ | Manage news articles (Tiptap) | | Rich editor, HTML allowlist sanitizer, publication workflow, featured images |
+| ✅ | Manage downloads (FilePond) | | Validated document uploads, metadata, replacement and deletion cleanup |
+| ✅ | Manage FAQs | | Searchable/filterable CRUD, publication status, ordering, and tests |
+| ✅ | Manage home settings (hero, stats) | | Hero, impact stats, enrollment chart, and Why PLASCHEMA cards |
+| ✅ | Contact message inbox | | Listing with filters, read/unread status, detail view, mark as read/unread |
+| ✅ | User management (admin only) | | Admin/editor accounts with self-deletion and final-admin guards |
+| ✅ | Grid.js data tables in admin | | Progressive sorting/search enhancement on CMS tables |
 
-**Phase 4 progress:** 0 / 12
+**Phase 4 progress:** 12 / 12 ✅
 
 ---
 
@@ -159,14 +159,14 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Services page / home section with interactive cards | | |
-| ⬜ | Online Enrollment link (configurable) | | URLs in `config/plaschema.php` |
-| ⬜ | Membership Verification link | | |
-| ⬜ | Premium Payment link | | |
-| ⬜ | PLASCHEMA Support link | | |
-| ⬜ | Admin/config for external URLs | | Env-based for now |
+| ✅ | Services page / home section with interactive cards | | Dedicated `/services` hub plus reusable homepage grid |
+| ✅ | Online Enrollment link (configurable) | | `SiteSetting` override with `.env` config fallback |
+| ✅ | Membership Verification link | | Secure external link with new-tab semantics |
+| ✅ | Premium Payment link | | Secure external link with new-tab semantics |
+| ✅ | PLASCHEMA Support link | | Secure external link with new-tab semantics |
+| ✅ | Admin/config for external URLs | | Validated admin settings editor + centralized service registry |
 
-**Phase 5 progress:** 0 / 6
+**Phase 5 progress:** 6 / 6 ✅
 
 ---
 
@@ -269,7 +269,10 @@
 | Date | Update |
 |------|--------|
 | 2026-06-29 | Created progress tracker from PRD v1.0 |
-| 2026-06-29 | Phase 2 complete — all public pages, DB content, contact form, downloads |
+| 2026-06-29 | Phase 3 complete — provider directory, map view, admin CRUD |
+| 2026-07-26 | Phase 4 started — admin authentication + role-based access complete |
+| 2026-07-26 | Phase 4 complete — all 12 Admin/CMS modules delivered; 51 tests / 163 assertions pass; production build succeeds |
+| 2026-07-26 | Phase 5 complete — Digital Services hub, homepage cards, four portal links, and admin URL settings; 54 tests / 177 assertions pass |
 
 ---
 
@@ -280,11 +283,11 @@
 | 0 — Foundation | 8 | 8 | 100% |
 | 1 — Design System | 9 | 9 | 100% |
 | 2 — Public Pages | 24 | 24 | 100% |
-| 3 — Providers | 0 | 7 | 0% |
-| 4 — Admin CMS | 0 | 12 | 0% |
-| 5 — Digital Services | 0 | 6 | 0% |
+| 3 — Providers | 7 | 7 | 100% |
+| 4 — Admin CMS | 12 | 12 | 100% |
+| 5 — Digital Services | 6 | 6 | 100% |
 | 6 — AI Assistant | 0 | 6 | 0% |
 | 7 — API | 0 | 6 | 0% |
 | 8 — QA & A11y | 0 | 8 | 0% |
 | 9 — Deployment | 0 | 7 | 0% |
-| **Total** | **41** | **93** | **44%** |
+| **Total** | **66** | **93** | **71%** |

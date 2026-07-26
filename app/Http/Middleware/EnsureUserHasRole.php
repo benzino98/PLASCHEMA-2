@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureUserHasRole
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  Closure(Request): (Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$roles): Response
+    {
+        if (! $request->user()) {
+            return $request->expectsJson()
+                ? response()->json(['message' => 'Unauthenticated.'], 401)
+                : redirect()->route('admin.login');
+        }
+
+        if (! $request->user()->hasRole($roles)) {
+            abort(403, 'Unauthorized action. You do not have the required role.');
+        }
+
+        return $next($request);
+    }
+}

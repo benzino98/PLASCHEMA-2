@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\Download;
 use App\Models\NewsArticle;
+use App\Models\User;
 use Database\Seeders\ContentSeeder;
+use Database\Seeders\ProviderSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,7 +18,7 @@ class PagesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(ContentSeeder::class);
+        $this->seed([ContentSeeder::class, ProviderSeeder::class]);
     }
 
     public function test_home_page_loads(): void
@@ -117,6 +119,11 @@ class PagesTest extends TestCase
 
     public function test_admin_dashboard_loads(): void
     {
-        $this->get('/admin')->assertOk()->assertSee('Admin Panel');
+        $admin = User::where('role', 'admin')->first();
+
+        $this->actingAs($admin)
+            ->get('/admin')
+            ->assertOk()
+            ->assertSee('Admin Panel');
     }
 }

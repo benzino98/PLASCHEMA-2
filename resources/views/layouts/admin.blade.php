@@ -45,45 +45,62 @@
                     <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
                     Dashboard
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.pages.index') }}" class="admin-nav-link {{ request()->routeIs('admin.pages.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="file-text" class="h-4 w-4"></i>
                     Pages
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.health-plans.index') }}" class="admin-nav-link {{ request()->routeIs('admin.health-plans.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="heart-pulse" class="h-4 w-4"></i>
                     Health Plans
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.providers.index') }}" class="admin-nav-link {{ request()->routeIs('admin.providers.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="building-2" class="h-4 w-4"></i>
                     Providers
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.news.index') }}" class="admin-nav-link {{ request()->routeIs('admin.news.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="newspaper" class="h-4 w-4"></i>
                     News
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.downloads.index') }}" class="admin-nav-link {{ request()->routeIs('admin.downloads.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="download" class="h-4 w-4"></i>
                     Downloads
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.faqs.index') }}" class="admin-nav-link {{ request()->routeIs('admin.faqs.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="help-circle" class="h-4 w-4"></i>
                     FAQs
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.messages.index') }}" class="admin-nav-link {{ request()->routeIs('admin.messages.*') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="mail" class="h-4 w-4"></i>
                     Messages
                 </a>
-                <a href="#" class="admin-nav-link">
+                <a href="{{ route('admin.settings.home') }}" class="admin-nav-link {{ request()->routeIs('admin.settings.home') ? 'admin-nav-link-active' : '' }}">
                     <i data-lucide="settings" class="h-4 w-4"></i>
                     Settings
                 </a>
+                <a href="{{ route('admin.settings.services') }}" class="admin-nav-link {{ request()->routeIs('admin.settings.services') ? 'admin-nav-link-active' : '' }}">
+                    <i data-lucide="globe" class="h-4 w-4"></i>
+                    Services
+                </a>
+                @if(auth()->user()?->isAdmin())
+                    <a href="{{ route('admin.users.index') }}" class="admin-nav-link {{ request()->routeIs('admin.users.*') ? 'admin-nav-link-active' : '' }}">
+                        <i data-lucide="users" class="h-4 w-4"></i>
+                        Users
+                    </a>
+                @endif
             </nav>
 
-            <div class="border-t border-slate-200 p-4">
+            <div class="border-t border-slate-200 p-4 space-y-1">
                 <a href="{{ route('home') }}" class="admin-nav-link">
                     <i data-lucide="external-link" class="h-4 w-4"></i>
                     View Public Site
                 </a>
+                <form method="POST" action="{{ route('admin.logout') }}">
+                    @csrf
+                    <button type="submit" class="admin-nav-link w-full text-left">
+                        <i data-lucide="log-out" class="h-4 w-4"></i>
+                        Logout
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -102,8 +119,10 @@
                 <h1 class="text-lg font-semibold text-slate-900">@yield('page_heading', 'Dashboard')</h1>
 
                 <div class="flex items-center gap-3">
-                    <span class="hidden text-sm text-slate-500 sm:inline">Admin</span>
-                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-xs font-semibold text-primary">A</div>
+                    <span class="hidden text-sm text-slate-500 sm:inline">{{ auth()->user()->name }}</span>
+                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 text-xs font-semibold text-primary">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </div>
                 </div>
             </header>
 
