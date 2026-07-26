@@ -1,0 +1,224 @@
+openapi: 3.1.0
+info:
+  title: PLASCHEMA API
+  version: 1.0.0
+  description: Public content and Sanctum-protected content-management API.
+servers:
+  - url: /api/v1
+security: []
+tags:
+  - name: Authentication
+  - name: Public
+  - name: Admin
+paths:
+  /auth/token:
+    post:
+      tags: [Authentication]
+      summary: Create a Sanctum bearer token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, device_name]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, format: password }
+                device_name: { type: string, maxLength: 100 }
+      responses:
+        '200': { description: Token created }
+        '422': { $ref: '#/components/responses/ValidationError' }
+    delete:
+      tags: [Authentication]
+      security: [{ bearerAuth: [] }]
+      summary: Revoke current bearer token
+      responses:
+        '200': { description: Token revoked }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+  /plans:
+    get:
+      tags: [Public]
+      summary: List health plans
+      parameters:
+        - { $ref: '#/components/parameters/PerPage' }
+        - { name: sector, in: query, schema: { type: string } }
+        - { name: featured, in: query, schema: { type: boolean } }
+      responses:
+        '200': { $ref: '#/components/responses/PlanCollection' }
+  /plans/{slug}:
+    get:
+      tags: [Public]
+      summary: Get a health plan
+      parameters: [{ $ref: '#/components/parameters/Slug' }]
+      responses:
+        '200': { description: Plan resource, content: { application/json: { schema: { $ref: '#/components/schemas/PlanEnvelope' } } } }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /providers:
+    get:
+      tags: [Public]
+      summary: List published providers
+      parameters:
+        - { $ref: '#/components/parameters/PerPage' }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: lga, in: query, schema: { type: string } }
+        - { name: specialty, in: query, schema: { type: string } }
+        - { name: ownership, in: query, schema: { type: string } }
+        - { name: service, in: query, schema: { type: string } }
+      responses:
+        '200': { $ref: '#/components/responses/ProviderCollection' }
+  /providers/search:
+    get:
+      tags: [Public]
+      summary: Search published providers
+      responses:
+        '200': { $ref: '#/components/responses/ProviderCollection' }
+  /providers/{slug}:
+    get:
+      tags: [Public]
+      summary: Get a published provider
+      parameters: [{ $ref: '#/components/parameters/Slug' }]
+      responses:
+        '200': { description: Provider resource }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /news:
+    get:
+      tags: [Public]
+      summary: List published news
+      parameters:
+        - { $ref: '#/components/parameters/PerPage' }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string, enum: [campaign, activity, press] } }
+      responses:
+        '200': { description: Paginated news resources }
+  /news/{slug}:
+    get:
+      tags: [Public]
+      summary: Get a published article
+      parameters: [{ $ref: '#/components/parameters/Slug' }]
+      responses:
+        '200': { description: News resource }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /faqs:
+    get:
+      tags: [Public]
+      summary: List published FAQ categories and questions
+      parameters: [{ name: category, in: query, schema: { type: string } }]
+      responses:
+        '200': { description: FAQ category resources }
+  /downloads:
+    get:
+      tags: [Public]
+      summary: List published downloads
+      parameters:
+        - { $ref: '#/components/parameters/PerPage' }
+        - { name: q, in: query, schema: { type: string } }
+        - { name: category, in: query, schema: { type: string, enum: [form, policy, guideline, report, circular] } }
+      responses:
+        '200': { description: Paginated download resources }
+  /contact:
+    post:
+      tags: [Public]
+      summary: Submit a contact enquiry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, email, subject, message]
+              properties:
+                name: { type: string, maxLength: 255 }
+                email: { type: string, format: email, maxLength: 255 }
+                subject: { type: string, maxLength: 255 }
+                message: { type: string, maxLength: 5000 }
+      responses:
+        '201': { description: Message created }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /admin/{resource}:
+    get:
+      tags: [Admin]
+      security: [{ bearerAuth: [] }]
+      summary: List protected content resources
+      parameters:
+        - { name: resource, in: path, required: true, schema: { type: string, enum: [providers, plans, news, faqs, downloads, messages] } }
+      responses:
+        '200': { description: Paginated resource collection }
+        '401': { $ref: '#/components/responses/Unauthenticated' }
+    post:
+      tags: [Admin]
+      security: [{ bearerAuth: [] }]
+      summary: Create provider, plan, news, or FAQ resource
+      parameters:
+        - { name: resource, in: path, required: true, schema: { type: string, enum: [providers, plans, news, faqs] } }
+      responses:
+        '201': { description: Resource created }
+        '422': { $ref: '#/components/responses/ValidationError' }
+  /admin/{resource}/{identifier}:
+    put:
+      tags: [Admin]
+      security: [{ bearerAuth: [] }]
+      summary: Update protected content resource
+      parameters:
+        - { name: resource, in: path, required: true, schema: { type: string } }
+        - { name: identifier, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Resource updated }
+    delete:
+      tags: [Admin]
+      security: [{ bearerAuth: [] }]
+      summary: Delete protected content resource
+      parameters:
+        - { name: resource, in: path, required: true, schema: { type: string } }
+        - { name: identifier, in: path, required: true, schema: { type: string } }
+      responses:
+        '200': { description: Resource deleted }
+  /admin/messages/{identifier}/read:
+    patch:
+      tags: [Admin]
+      security: [{ bearerAuth: [] }]
+      summary: Mark contact message read or unread (admin role only)
+      parameters: [{ name: identifier, in: path, required: true, schema: { type: integer } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: { is_read: { type: boolean, default: true } }
+      responses:
+        '200': { description: Message status updated }
+        '403': { $ref: '#/components/responses/Forbidden' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Sanctum
+  parameters:
+    Slug: { name: slug, in: path, required: true, schema: { type: string } }
+    PerPage: { name: per_page, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 15 } }
+  schemas:
+    Plan:
+      type: object
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        name: { type: string }
+        sector: { type: string }
+        description: { type: string }
+        price: { type: object }
+        featured: { type: boolean }
+        benefits: { type: array, items: { type: object } }
+    PlanEnvelope:
+      type: object
+      properties: { data: { $ref: '#/components/schemas/Plan' } }
+    Error:
+      type: object
+      properties: { message: { type: string } }
+  responses:
+    PlanCollection: { description: Paginated plan resources }
+    ProviderCollection: { description: Paginated provider resources }
+    ValidationError: { description: Validation failed }
+    Unauthenticated: { description: Missing or invalid bearer token }
+    Forbidden: { description: Insufficient role or token ability }
+    NotFound: { description: Resource not found }

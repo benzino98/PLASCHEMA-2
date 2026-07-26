@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs';
+import './assistant';
 import { animate } from 'motion';
 import ApexCharts from 'apexcharts';
 import { Notyf } from 'notyf';

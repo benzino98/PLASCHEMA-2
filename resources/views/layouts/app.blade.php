@@ -23,6 +23,7 @@
     </main>
 
     @include('partials.footer')
+    @include('partials.assistant')
 
     @if (session('success'))
         <script>

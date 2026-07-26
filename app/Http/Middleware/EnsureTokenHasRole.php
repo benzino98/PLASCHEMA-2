@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class EnsureTokenHasRole
+{
+    public function handle(Request $request, Closure $next, string ...$roles): Response
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        if (! $user->hasRole($roles)) {
+            return response()->json(['message' => 'User role is not permitted.'], 403);
+        }
+
+        if (! $user->currentAccessToken()->can('role:'.$user->role)) {
+            return response()->json(['message' => 'Insufficient token permissions.'], 403);
+        }
+
+        return $next($request);
+    }
+}

@@ -4,8 +4,8 @@
 > Plan reference: [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)  
 > Last updated: 2026-07-26
 
-**Overall status:** Phase 5 complete  
-**Current phase:** Phase 6 — AI Assistant  
+**Overall status:** Phase 7 complete  
+**Current phase:** Phase 8 — Quality, Accessibility & Performance  
 **Target v1 launch:** TBD
 
 ---
@@ -174,15 +174,15 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | Floating chat button UI | | |
-| ⬜ | Chat panel (Alpine.js) | | |
-| ⬜ | Enrollment guide responses | | |
-| ⬜ | Find hospitals helper (link to search) | | |
-| ⬜ | Plan explanation responses | | |
-| ⬜ | FAQ keyword matching | | Keyword/FAQ only (no LLM v1) |
-| ⏭️ | LLM integration (v2) | | Post-launch |
+| ✅ | Floating chat button UI | | Animated launcher with pulse ring, responsive positioning, reduced-motion support |
+| ✅ | Chat panel (Alpine.js) | | Deterministic component, keyboard Escape, focus return, live region, quick prompts |
+| ✅ | Enrollment guide responses | | Curated trust-marked reply with portal link |
+| ✅ | Find hospitals helper (link to search) | | Provider search page route with contextual link |
+| ✅ | Plan explanation responses | | Published plan list with names, descriptions, pricing |
+| ✅ | FAQ keyword matching | | Token-based term scoring against published FAQ questions/answers |
+| ⏭️ | LLM integration (v2) | | Post-launch deferred |
 
-**Phase 6 progress:** 0 / 6 (v1 scope)
+**Phase 6 progress:** 6 / 6 ✅ (v1 scope)
 
 ---
 
@@ -190,14 +190,14 @@
 
 | Status | Task | Owner | Notes |
 |--------|------|-------|-------|
-| ⬜ | API v1 route structure | | |
-| ⬜ | Public read endpoints (plans, providers, news, faqs) | | |
-| ⬜ | Provider search endpoint | | |
-| ⬜ | Contact form endpoint | | |
-| ⬜ | Sanctum-protected admin API | | |
-| ⬜ | API documentation | | |
+| ✅ | API v1 route structure | | 34 routes under `/api/v1` with named throttling tiers |
+| ✅ | Public read endpoints (plans, providers, news, faqs) | | Explicit JSON resources, pagination, publication boundaries |
+| ✅ | Provider search endpoint | | Query, LGA, specialty, ownership, service filters |
+| ✅ | Contact form endpoint | | Shared validation; 5 submissions/min/IP |
+| ✅ | Sanctum-protected admin API | | Token lifecycle, admin/editor content roles, stale-ability protection |
+| ✅ | API documentation | | OpenAPI 3.1 + curl quick-start and endpoint matrix |
 
-**Phase 7 progress:** 0 / 6
+**Phase 7 progress:** 6 / 6 ✅
 
 ---
 
@@ -272,7 +272,8 @@
 | 2026-06-29 | Phase 3 complete — provider directory, map view, admin CRUD |
 | 2026-07-26 | Phase 4 started — admin authentication + role-based access complete |
 | 2026-07-26 | Phase 4 complete — all 12 Admin/CMS modules delivered; 51 tests / 163 assertions pass; production build succeeds |
-| 2026-07-26 | Phase 5 complete — Digital Services hub, homepage cards, four portal links, and admin URL settings; 54 tests / 177 assertions pass |
+| 2026-07-26 | Phase 6 complete — AI Assistant MVP with deterministic intent matching, curated responses, FAQ scoring, and privacy-first disclosure; 58 tests / 192 assertions pass |
+| 2026-07-26 | Phase 7 complete — 34-route API v1, Sanctum token auth, role-gated CMS endpoints, OpenAPI 3.1 docs; 66 tests / 238 assertions pass; Composer audit clean |
 
 ---
 
@@ -286,8 +287,8 @@
 | 3 — Providers | 7 | 7 | 100% |
 | 4 — Admin CMS | 12 | 12 | 100% |
 | 5 — Digital Services | 6 | 6 | 100% |
-| 6 — AI Assistant | 0 | 6 | 0% |
-| 7 — API | 0 | 6 | 0% |
+| 6 — AI Assistant | 6 | 6 | 100% |
+| 7 — API | 6 | 6 | 100% |
 | 8 — QA & A11y | 0 | 8 | 0% |
 | 9 — Deployment | 0 | 7 | 0% |
-| **Total** | **66** | **93** | **71%** |
+| **Total** | **78** | **93** | **84%** |
