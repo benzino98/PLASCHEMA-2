@@ -25,6 +25,7 @@
         "lucide": "^1.22.0",
         "motion": "^12.42.0",
         "notyf": "^3.10.0",
-        "sweetalert2": "^11.26.25"
+        "sweetalert2": "^11.26.25",
+        "tom-select": "^2.6.2"
     }
 }

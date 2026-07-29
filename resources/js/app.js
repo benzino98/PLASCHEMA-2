@@ -11,6 +11,8 @@ import * as FilePond from 'filepond';
 import 'filepond/dist/filepond.min.css';
 import { Grid } from 'gridjs';
 import 'gridjs/dist/theme/mermaid.css';
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.css';
 
 window.Alpine = Alpine;
 window.ApexCharts = ApexCharts;
@@ -69,6 +71,18 @@ window.enhanceAdminTables = () => {
     });
 };
 
+window.enhanceSelects = () => {
+    document.querySelectorAll('[data-tom-select]').forEach((el) => {
+        if (!el.tomselect) {
+            new TomSelect(el, {
+                create: false,
+                maxOptions: null,
+                controlInput: '<input>',
+            });
+        }
+    });
+};
+
 window.refreshIcons = () => createIcons({ icons });
 
 window.notyf = new Notyf({
@@ -96,6 +110,7 @@ window.Swal = Swal.mixin({
 document.addEventListener('DOMContentLoaded', () => {
     window.enhanceAdminTables();
     window.refreshIcons();
+    window.enhanceSelects();
 });
 
 document.addEventListener('alpine:initialized', () => window.refreshIcons());

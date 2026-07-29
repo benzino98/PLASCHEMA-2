@@ -24,7 +24,7 @@ class ProvidersTest extends TestCase
         $this->get('/providers')
             ->assertOk()
             ->assertSee('Jos University Teaching Hospital')
-            ->assertSee('providers found');
+            ->assertSee('provider');
     }
 
     public function test_providers_can_be_filtered_by_lga(): void

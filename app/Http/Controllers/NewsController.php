@@ -11,11 +11,23 @@ class NewsController extends Controller
     public function index(Request $request): View
     {
         $category = $request->query('category');
+        $search = $request->query('q');
 
-        $articles = NewsArticle::query()
+        $query = NewsArticle::query()
             ->published()
             ->when($category, fn ($q) => $q->where('category', $category))
-            ->latest('published_at')
+            ->when($search, fn ($q) => $q->where(fn($q2) => $q2->where('title', 'like', "%{$search}%")->orWhere('excerpt', 'like', "%{$search}%")));
+
+        // If no filters are applied, the first article becomes the featured article
+        $featured = null;
+        if (!$category && !$search) {
+            $featured = (clone $query)->latest('published_at')->first();
+            if ($featured) {
+                $query->where('id', '!=', $featured->id);
+            }
+        }
+
+        $articles = $query->latest('published_at')
             ->paginate(9)
             ->withQueryString();
 
@@ -27,7 +39,7 @@ class NewsController extends Controller
             'press' => 'Press Releases',
         ];
 
-        return view('pages.news.index', compact('articles', 'categories', 'category'));
+        return view('pages.news.index', compact('articles', 'categories', 'category', 'search', 'featured'));
     }
 
     public function show(string $slug): View

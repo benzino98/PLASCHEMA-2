@@ -36,4 +36,10 @@ class NewsArticle extends Model
             default => 'Article',
         };
     }
+
+    public function getReadingTimeAttribute(): int
+    {
+        $wordCount = str_word_count(strip_tags($this->body));
+        return max(1, (int) ceil($wordCount / 200));
+    }
 }

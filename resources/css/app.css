@@ -47,6 +47,11 @@
         @apply bg-surface font-sans text-slate-800 antialiased;
     }
 
+    img, video {
+        height: auto;
+        max-width: 100%;
+    }
+
     :focus-visible {
         @apply outline-2 outline-offset-2 outline-primary;
     }
@@ -114,6 +119,23 @@
     .tiptap-content ul { @apply my-3 list-disc pl-6; }
     .tiptap-content ol { @apply my-3 list-decimal pl-6; }
     .tiptap-content blockquote { @apply my-4 border-l-4 border-primary pl-4 italic text-slate-600; }
+    
+    /* Tom Select Overrides */
+    .ts-wrapper.single .ts-control {
+        @apply rounded-[var(--radius-button)] border-slate-200 bg-white py-2 px-3 text-sm text-slate-800 shadow-none outline-none;
+    }
+    .ts-wrapper.single.focus .ts-control {
+        @apply border-primary ring-1 ring-primary;
+    }
+    .ts-dropdown {
+        @apply rounded-[var(--radius-button)] border border-slate-200 bg-white shadow-lg text-sm text-slate-800;
+    }
+    .ts-dropdown .option {
+        @apply px-3 py-2;
+    }
+    .ts-dropdown .active {
+        @apply bg-primary-50 text-primary;
+    }
 }
 
 /* =========================================================================

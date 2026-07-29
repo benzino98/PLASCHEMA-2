@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    'analytics' => [
+        'provider' => env('ANALYTICS_PROVIDER'),
+        'id' => env('ANALYTICS_ID'),
+        'domain' => env('ANALYTICS_DOMAIN'),
+        'script_url' => env('ANALYTICS_SCRIPT_URL'),
+    ],
+
 ];

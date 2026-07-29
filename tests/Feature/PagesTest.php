@@ -112,7 +112,7 @@ class PagesTest extends TestCase
     public function test_faqs_page_has_search_and_categories(): void
     {
         $this->get('/faqs')
-            ->assertSee('Search questions')
+            ->assertSee('Search for answers')
             ->assertSee('Enrollment')
             ->assertSee('Who is eligible for PLASCHEMA?');
     }

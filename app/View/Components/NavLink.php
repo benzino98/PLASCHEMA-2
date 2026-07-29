@@ -15,12 +15,12 @@ class NavLink extends Component
 
     public function href(): string
     {
-        if (isset($item['route'])) {
-            return route($item['route']);
+        if (isset($this->item['route'])) {
+            return route($this->item['route']);
         }
 
-        if (isset($item['url'])) {
-            $url = $item['url'];
+        if (isset($this->item['url'])) {
+            $url = $this->item['url'];
 
             return str_starts_with($url, 'plaschema.')
                 ? config($url)
@@ -32,16 +32,16 @@ class NavLink extends Component
 
     public function isActive(): bool
     {
-        if (! isset($item['route'])) {
+        if (! isset($this->item['route'])) {
             return false;
         }
 
-        return request()->routeIs($item['route']);
+        return request()->routeIs($this->item['route']);
     }
 
     public function isExternal(): bool
     {
-        return ($item['external'] ?? false) || isset($item['url']);
+        return ($this->item['external'] ?? false) || isset($this->item['url']);
     }
 
     public function render(): View|Closure|string

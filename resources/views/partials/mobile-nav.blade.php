@@ -45,10 +45,10 @@
         </div>
 
         <div class="space-y-3 border-t border-slate-200 p-6">
-            <a href="{{ config('plaschema.services.enrollment') }}" class="btn-primary w-full" target="_blank" rel="noopener noreferrer">
+            <a href="{{ \App\Support\DigitalServices::url('enrollment') }}" class="btn-primary w-full" target="_blank" rel="noopener noreferrer">
                 Enroll Now
             </a>
-            <a href="{{ config('plaschema.services.verification') }}" class="btn-outline w-full" target="_blank" rel="noopener noreferrer">
+            <a href="{{ \App\Support\DigitalServices::url('verification') }}" class="btn-outline w-full" target="_blank" rel="noopener noreferrer">
                 Verify Enrollment
             </a>
         </div>

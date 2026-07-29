@@ -51,6 +51,13 @@ class PageController extends Controller
         $plans = HealthPlan::query()->with('benefits')->orderBy('sort_order')->get();
         $benefitRows = $plans->first()?->benefits ?? collect();
 
-        return view('pages.health-plans', compact('plans', 'benefitRows'));
+        $faqs = Faq::query()
+            ->whereHas('category', fn ($q) => $q->where('name', 'Health Plans'))
+            ->where('is_published', true)
+            ->orderBy('sort_order')
+            ->take(4)
+            ->get();
+
+        return view('pages.health-plans', compact('plans', 'benefitRows', 'faqs'));
     }
 }
