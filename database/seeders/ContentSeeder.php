@@ -232,7 +232,7 @@ class ContentSeeder extends Seeder
                 'category' => $file['category'],
                 'description' => "Official PLASCHEMA document: {$file['title']}.",
                 'file_path' => $path,
-                'file_size' => strlen($content),
+                'file_size' => fake()->numberBetween(150_000, 5_000_000),
                 'mime_type' => 'application/pdf',
                 'published_at' => now(),
                 'is_published' => true,

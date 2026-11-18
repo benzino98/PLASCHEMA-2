@@ -100,14 +100,8 @@
                 {{-- Social --}}
                 <div class="mt-6 flex gap-3">
                     @foreach (config('navigation.social') as $social)
-                        <a
-                            href="{{ $social['url'] }}"
-                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition hover:bg-primary hover:text-white"
-                            aria-label="{{ $social['label'] }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <i data-lucide="{{ $social['icon'] }}" class="h-4 w-4"></i>
+                        <a href="{{ $social['url'] }}" class="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-800 text-slate-400 transition hover:bg-primary hover:text-white" aria-label="{{ $social['label'] }}" target="_blank" rel="noopener noreferrer">
+                           <div class="h-4 w-4">{!! $social['svg'] !!}</div>
                         </a>
                     @endforeach
                 </div>
