@@ -1,6 +1,6 @@
 # Shared Hosting Deployment Guide
 
-> PLASCHEMA production deployment on **cPanel shared hosting without SSH/Terminal access** (root directory: `/home/plaschem`).  
+> PLASCHEMA production deployment on **cPanel shared hosting without SSH/Terminal access** (root directory: `/home/plaschem`, PHP: **8.4+**).  
 > Deploy via **FTP / FTPS** using GitHub Actions CI/CD.
 
 ---
