@@ -16,11 +16,11 @@ class NewsController extends Controller
         $query = NewsArticle::query()
             ->published()
             ->when($category, fn ($q) => $q->where('category', $category))
-            ->when($search, fn ($q) => $q->where(fn($q2) => $q2->where('title', 'like', "%{$search}%")->orWhere('excerpt', 'like', "%{$search}%")));
+            ->when($search, fn ($q) => $q->where(fn ($q2) => $q2->where('title', 'like', "%{$search}%")->orWhere('excerpt', 'like', "%{$search}%")));
 
         // If no filters are applied, the first article becomes the featured article
         $featured = null;
-        if (!$category && !$search) {
+        if (! $category && ! $search) {
             $featured = (clone $query)->latest('published_at')->first();
             if ($featured) {
                 $query->where('id', '!=', $featured->id);

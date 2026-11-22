@@ -91,24 +91,24 @@ class DeployController extends Controller
 
                 case 'all':
                     Artisan::call('migrate', ['--force' => true]);
-                    $output = "=== 1. DATABASE MIGRATIONS ===\n" . Artisan::output() . "\n";
+                    $output = "=== 1. DATABASE MIGRATIONS ===\n".Artisan::output()."\n";
 
-                    $output .= "=== 2. STORAGE SYMLINK ===\n" . $this->ensureStorageLink() . "\n";
+                    $output .= "=== 2. STORAGE SYMLINK ===\n".$this->ensureStorageLink()."\n";
 
                     Artisan::call('optimize');
-                    $output .= "=== 3. CACHE & OPTIMIZATION ===\n" . Artisan::output();
+                    $output .= "=== 3. CACHE & OPTIMIZATION ===\n".Artisan::output();
                     break;
 
                 case 'status':
                 default:
                     $action = 'status';
                     Artisan::call('migrate:status');
-                    $output = "=== MIGRATION STATUS ===\n" . Artisan::output();
+                    $output = "=== MIGRATION STATUS ===\n".Artisan::output();
                     break;
             }
         } catch (\Throwable $e) {
             $success = false;
-            $output .= "\n[EXCEPTION OCCURRED]: " . $e->getMessage() . "\n" . $e->getFile() . ':' . $e->getLine();
+            $output .= "\n[EXCEPTION OCCURRED]: ".$e->getMessage()."\n".$e->getFile().':'.$e->getLine();
         }
 
         if ($request->wantsJson() || $request->hasHeader('X-Deploy-Key')) {
@@ -179,6 +179,7 @@ class DeployController extends Controller
 
         try {
             Artisan::call('storage:link');
+
             return Artisan::output();
         } catch (\Throwable $e) {
             if (function_exists('symlink')) {

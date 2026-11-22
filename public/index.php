@@ -26,4 +26,3 @@ if ($corePath !== __DIR__.'/..') {
 }
 
 $app->handleRequest(Request::capture());
-

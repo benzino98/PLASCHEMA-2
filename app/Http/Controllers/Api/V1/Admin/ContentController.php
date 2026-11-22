@@ -234,6 +234,6 @@ class ContentController extends Controller
             $slug = $base.'-'.$i++;
         }
 
-return $slug;
+        return $slug;
     }
 }
