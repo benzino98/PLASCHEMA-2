@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\ProviderController as AdminProviderController;
 use App\Http\Controllers\Admin\ServiceSettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DeployController;
 use App\Http\Controllers\DownloadController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\NewsController;
@@ -18,6 +19,10 @@ use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index']);
+
+// Shared Hosting Deployment & Maintenance Console (protected by DEPLOY_KEY)
+Route::get('/_deploy', [DeployController::class, 'index'])->name('deploy.index');
+Route::match(['GET', 'POST'], '/_deploy/run', [DeployController::class, 'run'])->name('deploy.run');
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/about', [PageController::class, 'about'])->name('about');

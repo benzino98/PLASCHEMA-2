@@ -1,42 +1,137 @@
-name: Deploy
+name: Deploy to Shared Hosting
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+  # To trigger automatic deployment on push to main once secrets are configured,
+  # uncomment the lines below:
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
 
 jobs:
   deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, pdo_mysql, bcmath, xml, ctype, json, fileinfo
+          extensions: mbstring, pdo_mysql, bcmath, xml, ctype, json, fileinfo, openssl, tokenizer
+          coverage: none
 
-      - name: Install Composer dependencies (production)
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-prod-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-prod-
+
+      - name: Install Composer Dependencies (Production)
         run: composer install --prefer-dist --no-interaction --no-dev --optimize-autoloader
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
 
-      - name: Install npm dependencies
+      - name: Install NPM Dependencies
         run: npm ci
 
-      - name: Build frontend assets
+      - name: Build Frontend Assets
         run: npm run build
 
-      - name: Prepare deployment package
+      - name: Prepare Staged Deployment Structure
         run: |
-          rm -rf node_modules tests .git .github
-          find . -name ".DS_Store" -delete
+          echo "Setting up staged deployment layout for /home/plaschem..."
+          mkdir -p deploy_staging/plaschema
+          mkdir -p deploy_staging/public_html
+
+          # 1. Sync core Laravel files into deploy_staging/plaschema (outside public_html)
+          rsync -av \
+            --exclude='.git*' \
+            --exclude='.github' \
+            --exclude='node_modules' \
+            --exclude='tests' \
+            --exclude='public' \
+            --exclude='deploy_staging' \
+            --exclude='.env*' \
+            --exclude='.phpunit.result.cache' \
+            --exclude='.editorconfig' \
+            --exclude='.gitattributes' \
+            --exclude='.gitignore' \
+            --exclude='phpunit.xml' \
+            --exclude='README.md' \
+            --exclude='vite.config.js' \
+            --exclude='package*.json' \
+            --exclude='.DS_Store' \
+            --exclude='._*' \
+            ./ deploy_staging/plaschema/
+
+          # 2. Clean temporary/local cache and logs in staging core
+          rm -rf deploy_staging/plaschema/storage/logs/*.log
+          rm -rf deploy_staging/plaschema/storage/framework/cache/data/*
+          rm -rf deploy_staging/plaschema/storage/framework/sessions/*
+          rm -rf deploy_staging/plaschema/storage/framework/views/*
+          find deploy_staging -name ".DS_Store" -delete 2>/dev/null || true
+          find deploy_staging -name "._*" -delete 2>/dev/null || true
+
+          # 3. Ensure essential runtime directories exist
+          mkdir -p deploy_staging/plaschema/storage/framework/cache/data
+          mkdir -p deploy_staging/plaschema/storage/framework/sessions
+          mkdir -p deploy_staging/plaschema/storage/framework/views
+          mkdir -p deploy_staging/plaschema/storage/logs
+          mkdir -p deploy_staging/plaschema/storage/app/public
+          mkdir -p deploy_staging/plaschema/bootstrap/cache
+
+          # 4. Sync public assets into deploy_staging/public_html
+          rsync -av --exclude='.DS_Store' --exclude='._*' public/ deploy_staging/public_html/
+
+          # 5. Write the production public_html/index.php pointing to ../plaschema
+          cat << 'EOF' > deploy_staging/public_html/index.php
+          <?php
+
+          use Illuminate\Foundation\Application;
+          use Illuminate\Http\Request;
+
+          define('LARAVEL_START', microtime(true));
+
+          // Laravel core directory outside public_html (/home/plaschem/plaschema)
+          $corePath = __DIR__.'/../plaschema';
+
+          // Determine if the application is in maintenance mode...
+          if (file_exists($maintenance = $corePath.'/storage/framework/maintenance.php')) {
+              require $maintenance;
+          }
+
+          // Register the Composer autoloader...
+          require $corePath.'/vendor/autoload.php';
+
+          // Bootstrap Laravel and handle the request...
+          /** @var Application $app */
+          $app = require_once $corePath.'/bootstrap/app.php';
+
+          // Bind public path to public_html (/home/plaschem/public_html)
+          $app->usePublicPath(__DIR__);
+
+          $app->handleRequest(Request::capture());
+          EOF
+
+          echo "Deployment staging structure prepared successfully:"
+          ls -la deploy_staging
+          ls -la deploy_staging/public_html
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -44,14 +139,24 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          local-dir: ./deploy_staging/
+          protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/tests/**
-            .env
-            .env.example
+            **/.env*
+            **/public_html/storage/**
+            **/plaschema/storage/app/public/**
+            **/plaschema/storage/logs/*.log
 
-      # Post-deploy: run migrations via cPanel Terminal or temporary DB access.
-      # See docs/HOSTING.md for manual steps when SSH is unavailable.
+      - name: Run Remote Migrations & Optimizations (Optional)
+        if: ${{ secrets.DEPLOY_KEY != '' && secrets.APP_URL != '' }}
+        run: |
+          echo "Triggering post-deploy migrations via secure endpoint..."
+          RESPONSE=$(curl -s -S -X POST "${{ secrets.APP_URL }}/_deploy/run" \
+            -H "X-Deploy-Key: ${{ secrets.DEPLOY_KEY }}" \
+            -d "action=all" || true)
+          echo "Server response: $RESPONSE"
