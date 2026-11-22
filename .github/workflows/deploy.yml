@@ -2,10 +2,8 @@ name: Deploy to Shared Hosting
 
 on:
   workflow_dispatch:
-  # To trigger automatic deployment on push to main once secrets are configured,
-  # uncomment the lines below:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 concurrency:
   group: production-deployment
