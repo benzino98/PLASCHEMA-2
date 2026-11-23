@@ -72,6 +72,23 @@ class DeployTest extends TestCase
         $response->assertSee('PLASCHEMA Deploy');
     }
 
+    public function test_deploy_run_executes_seed_action(): void
+    {
+        Config::set('plaschema.deploy_key', 'valid-secret-token-12345');
+
+        $response = $this->postJson('/_deploy/run', [
+            'action' => 'seed',
+        ], [
+            'X-Deploy-Key' => 'valid-secret-token-12345',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'success' => true,
+            'action' => 'seed',
+        ]);
+    }
+
     public function test_deploy_run_executes_clear_action(): void
     {
         Config::set('plaschema.deploy_key', 'valid-secret-token-12345');

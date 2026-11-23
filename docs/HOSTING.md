@@ -123,6 +123,7 @@ This application includes a secure web maintenance console protected by `DEPLOY_
 2. **Actions Available**:
    - 🚀 **Run All Post-Deploy Tasks**: Runs migrations, links storage, and caches configurations in one click.
    - 🗄️ **Run Migrations**: Runs `php artisan migrate --force` and prints real-time terminal output.
+   - 🌱 **Seed Database**: Runs `php artisan db:seed --force` to populate initial content, settings, and providers.
    - 🔗 **Create Storage Link**: Automatically links `/home/plaschem/public_html/storage` to `/home/plaschem/plaschema/storage/app/public`.
    - ⚡ **Cache & Optimize**: Runs `php artisan optimize` for faster page loads in production.
    - 🧹 **Clear Cache**: Clears view, route, and config caches.

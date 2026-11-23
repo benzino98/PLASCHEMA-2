@@ -113,6 +113,8 @@
         button.btn-primary:hover { background: #0369a1; }
         button.btn-success { background: #16a34a; color: white; }
         button.btn-success:hover { background: #15803d; }
+        button.btn-emerald { background: #059669; color: white; }
+        button.btn-emerald:hover { background: #047857; }
         button.btn-amber { background: #d97706; color: white; }
         button.btn-amber:hover { background: #b45309; }
         button.btn-secondary { background: #334155; color: #f1f5f9; }
@@ -230,6 +232,14 @@
                     <input type="hidden" name="action" value="migrate">
                     <button type="submit" class="btn btn-success">
                         🗄️ Run Migrations (migrate --force)
+                    </button>
+                </form>
+
+                <form method="POST" action="{{ route('deploy.run') }}" onsubmit="return confirm('Run database seeders? This will insert default records.');">
+                    <input type="hidden" name="key" value="{{ $key }}">
+                    <input type="hidden" name="action" value="seed">
+                    <button type="submit" class="btn btn-emerald">
+                        🌱 Seed Database (db:seed --force)
                     </button>
                 </form>
 
