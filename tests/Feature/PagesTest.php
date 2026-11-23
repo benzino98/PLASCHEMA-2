@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\Download;
 use App\Models\NewsArticle;
+use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\ContentSeeder;
 use Database\Seeders\ProviderSeeder;
@@ -51,6 +52,16 @@ class PagesTest extends TestCase
         $this->get('/about')
             ->assertSee('Our Mission')
             ->assertSee('Gallery');
+    }
+
+    public function test_about_page_loads_gracefully_when_unseeded(): void
+    {
+        Page::query()->delete();
+
+        $this->get('/about')
+            ->assertOk()
+            ->assertSee('Building a healthier')
+            ->assertSee('Plateau State');
     }
 
     public function test_health_plans_shows_all_five_plans(): void

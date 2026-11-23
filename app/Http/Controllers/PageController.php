@@ -41,7 +41,16 @@ class PageController extends Controller
 
     public function about(): View
     {
-        $page = Page::query()->where('slug', 'about')->with('sections')->firstOrFail();
+        $page = Page::query()->where('slug', 'about')->with('sections')->first();
+
+        if (! $page) {
+            $page = new Page([
+                'slug' => 'about',
+                'title' => 'About PLASCHEMA',
+                'meta_description' => 'Learn about the Plateau State Contributory Healthcare Management Agency — our mission, vision, leadership, and history.',
+            ]);
+            $page->setRelation('sections', collect());
+        }
 
         return view('pages.about', compact('page'));
     }
