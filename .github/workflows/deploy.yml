@@ -131,13 +131,26 @@ jobs:
           ls -la deploy_staging
           ls -la deploy_staging/public_html
 
+          # Sanitize FTP destination folder (FTP-Deploy-Action strictly requires a trailing slash)
+          RAW_SERVER_DIR="${{ secrets.FTP_SERVER_DIR }}"
+          if [ -z "$RAW_SERVER_DIR" ]; then
+            CLEAN_SERVER_DIR="./"
+          else
+            case "$RAW_SERVER_DIR" in
+              */) CLEAN_SERVER_DIR="$RAW_SERVER_DIR" ;;
+              *) CLEAN_SERVER_DIR="${RAW_SERVER_DIR}/" ;;
+            esac
+          fi
+          echo "FTP_CLEAN_SERVER_DIR=${CLEAN_SERVER_DIR}" >> $GITHUB_ENV
+          echo "Target FTP server directory: ${CLEAN_SERVER_DIR}"
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_SERVER_DIR || './' }}
+          server-dir: ${{ env.FTP_CLEAN_SERVER_DIR }}
           local-dir: ./deploy_staging/
           protocol: ${{ secrets.FTP_PROTOCOL || 'ftp' }}
           exclude: |

@@ -46,7 +46,7 @@ In your GitHub repository, navigate to **Settings → Secrets and variables → 
 | `FTP_SERVER` | **Yes** | Hostname or IP of your server (e.g. `ftp.plaschema.gov.ng` or server IP) |
 | `FTP_USERNAME` | **Yes** | FTP username with access to `/home/plaschem` (e.g. `plaschem`) |
 | `FTP_PASSWORD` | **Yes** | Password for the FTP account |
-| `FTP_SERVER_DIR` | No | `./` *(default, targets `/home/plaschem`)* |
+| `FTP_SERVER_DIR` | No | `./` *(must end with `/`, targets `/home/plaschem`)* |
 | `FTP_PROTOCOL` | No | `ftp` *(default, or `ftps` if your host supports TLS)* |
 | `APP_URL` | No | `https://www.plaschema.gov.ng` *(enables automatic post-deploy migrations)* |
 | `DEPLOY_KEY` | No | A secret key matching `DEPLOY_KEY` in your `.env` |
