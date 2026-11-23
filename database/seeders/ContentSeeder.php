@@ -92,25 +92,31 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($plans as $i => $planData) {
-            $plan = HealthPlan::create([
-                'name' => $planData['name'],
-                'slug' => $planData['slug'],
-                'sector' => $planData['sector'],
-                'description' => $planData['description'],
-                'price_label' => $planData['price_label'],
-                'price_amount' => $planData['price_amount'],
-                'is_featured' => $planData['featured'],
-                'sort_order' => $i + 1,
-            ]);
+            $plan = HealthPlan::updateOrCreate(
+                ['slug' => $planData['slug']],
+                [
+                    'name' => $planData['name'],
+                    'sector' => $planData['sector'],
+                    'description' => $planData['description'],
+                    'price_label' => $planData['price_label'],
+                    'price_amount' => $planData['price_amount'],
+                    'is_featured' => $planData['featured'],
+                    'sort_order' => $i + 1,
+                ]
+            );
 
             foreach ($benefitDefs as $key => $label) {
-                PlanBenefit::create([
-                    'health_plan_id' => $plan->id,
-                    'benefit_key' => $key,
-                    'benefit_label' => $label,
-                    'is_included' => $planData['benefits'][$key] ?? false,
-                    'sort_order' => array_search($key, array_keys($benefitDefs)) + 1,
-                ]);
+                PlanBenefit::updateOrCreate(
+                    [
+                        'health_plan_id' => $plan->id,
+                        'benefit_key' => $key,
+                    ],
+                    [
+                        'benefit_label' => $label,
+                        'is_included' => $planData['benefits'][$key] ?? false,
+                        'sort_order' => array_search($key, array_keys($benefitDefs)) + 1,
+                    ]
+                );
             }
         }
     }
@@ -153,19 +159,25 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($categories as $slug => $data) {
-            $cat = FaqCategory::create([
-                'name' => $data['name'],
-                'slug' => $slug,
-                'sort_order' => array_search($slug, array_keys($categories)) + 1,
-            ]);
+            $cat = FaqCategory::updateOrCreate(
+                ['slug' => $slug],
+                [
+                    'name' => $data['name'],
+                    'sort_order' => array_search($slug, array_keys($categories)) + 1,
+                ]
+            );
 
             foreach ($data['faqs'] as $i => [$question, $answer]) {
-                Faq::create([
-                    'faq_category_id' => $cat->id,
-                    'question' => $question,
-                    'answer' => $answer,
-                    'sort_order' => $i + 1,
-                ]);
+                Faq::updateOrCreate(
+                    [
+                        'faq_category_id' => $cat->id,
+                        'question' => $question,
+                    ],
+                    [
+                        'answer' => $answer,
+                        'sort_order' => $i + 1,
+                    ]
+                );
             }
         }
     }
@@ -194,15 +206,17 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($articles as $article) {
-            NewsArticle::create([
-                'title' => $article['title'],
-                'slug' => Str::slug($article['title']),
-                'excerpt' => $article['excerpt'],
-                'body' => $article['body'],
-                'category' => $article['category'],
-                'published_at' => now()->subDays($article['days_ago']),
-                'is_published' => true,
-            ]);
+            NewsArticle::updateOrCreate(
+                ['slug' => Str::slug($article['title'])],
+                [
+                    'title' => $article['title'],
+                    'excerpt' => $article['excerpt'],
+                    'body' => $article['body'],
+                    'category' => $article['category'],
+                    'published_at' => now()->subDays($article['days_ago']),
+                    'is_published' => true,
+                ]
+            );
         }
     }
 
@@ -226,27 +240,31 @@ class ContentSeeder extends Seeder
             $content = "%PDF-1.4\n% PLASCHEMA Placeholder - {$file['title']}\n";
             Storage::disk('public')->put($path, $content);
 
-            Download::create([
-                'title' => $file['title'],
-                'slug' => Str::slug($file['title']),
-                'category' => $file['category'],
-                'description' => "Official PLASCHEMA document: {$file['title']}.",
-                'file_path' => $path,
-                'file_size' => fake()->numberBetween(150_000, 5_000_000),
-                'mime_type' => 'application/pdf',
-                'published_at' => now(),
-                'is_published' => true,
-            ]);
+            Download::updateOrCreate(
+                ['slug' => Str::slug($file['title'])],
+                [
+                    'title' => $file['title'],
+                    'category' => $file['category'],
+                    'description' => "Official PLASCHEMA document: {$file['title']}.",
+                    'file_path' => $path,
+                    'file_size' => 250_000,
+                    'mime_type' => 'application/pdf',
+                    'published_at' => now(),
+                    'is_published' => true,
+                ]
+            );
         }
     }
 
     private function seedAboutPage(): void
     {
-        $page = Page::create([
-            'slug' => 'about',
-            'title' => 'About PLASCHEMA',
-            'meta_description' => 'Learn about the Plateau State Contributory Healthcare Management Agency — our mission, vision, leadership, and history.',
-        ]);
+        $page = Page::updateOrCreate(
+            ['slug' => 'about'],
+            [
+                'title' => 'About PLASCHEMA',
+                'meta_description' => 'Learn about the Plateau State Contributory Healthcare Management Agency — our mission, vision, leadership, and history.',
+            ]
+        );
 
         $sections = [
             ['key' => 'mission', 'title' => 'Our Mission', 'content' => 'To provide affordable, accessible, and quality healthcare to all residents of Plateau State through a sustainable contributory health insurance scheme that leaves no citizen behind.'],
@@ -284,13 +302,17 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($sections as $i => $section) {
-            PageSection::create([
-                'page_id' => $page->id,
-                'key' => $section['key'],
-                'title' => $section['title'],
-                'content' => $section['content'],
-                'sort_order' => $i + 1,
-            ]);
+            PageSection::updateOrCreate(
+                [
+                    'page_id' => $page->id,
+                    'key' => $section['key'],
+                ],
+                [
+                    'title' => $section['title'],
+                    'content' => $section['content'],
+                    'sort_order' => $i + 1,
+                ]
+            );
         }
     }
 
@@ -303,13 +325,15 @@ class ContentSeeder extends Seeder
         ];
 
         foreach ($stories as $i => $story) {
-            SuccessStory::create([
-                'title' => $story['title'],
-                'excerpt' => $story['excerpt'],
-                'author_name' => $story['author_name'],
-                'author_location' => $story['author_location'],
-                'sort_order' => $i + 1,
-            ]);
+            SuccessStory::updateOrCreate(
+                ['title' => $story['title']],
+                [
+                    'excerpt' => $story['excerpt'],
+                    'author_name' => $story['author_name'],
+                    'author_location' => $story['author_location'],
+                    'sort_order' => $i + 1,
+                ]
+            );
         }
     }
 

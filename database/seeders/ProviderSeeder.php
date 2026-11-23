@@ -171,11 +171,13 @@ class ProviderSeeder extends Seeder
         ];
 
         foreach ($providers as $data) {
-            HealthcareProvider::create([
-                ...$data,
-                'slug' => Str::slug($data['name']),
-                'is_published' => true,
-            ]);
+            HealthcareProvider::updateOrCreate(
+                ['slug' => Str::slug($data['name'])],
+                [
+                    ...$data,
+                    'is_published' => true,
+                ]
+            );
         }
     }
 }
