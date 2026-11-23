@@ -83,6 +83,7 @@ jobs:
           rm -rf deploy_staging/plaschema/storage/framework/cache/data/*
           rm -rf deploy_staging/plaschema/storage/framework/sessions/*
           rm -rf deploy_staging/plaschema/storage/framework/views/*
+          rm -rf deploy_staging/plaschema/bootstrap/cache/*.php
           find deploy_staging -name ".DS_Store" -delete 2>/dev/null || true
           find deploy_staging -name "._*" -delete 2>/dev/null || true
 
@@ -97,35 +98,8 @@ jobs:
           # 4. Sync public assets into deploy_staging/public_html
           rsync -av --exclude='.DS_Store' --exclude='._*' public/ deploy_staging/public_html/
 
-          # 5. Write the production public_html/index.php pointing to ../plaschema
-          cat << 'EOF' > deploy_staging/public_html/index.php
-          <?php
-
-          use Illuminate\Foundation\Application;
-          use Illuminate\Http\Request;
-
-          define('LARAVEL_START', microtime(true));
-
-          // Laravel core directory outside public_html (/home/plaschem/plaschema)
-          $corePath = __DIR__.'/../plaschema';
-
-          // Determine if the application is in maintenance mode...
-          if (file_exists($maintenance = $corePath.'/storage/framework/maintenance.php')) {
-              require $maintenance;
-          }
-
-          // Register the Composer autoloader...
-          require $corePath.'/vendor/autoload.php';
-
-          // Bootstrap Laravel and handle the request...
-          /** @var Application $app */
-          $app = require_once $corePath.'/bootstrap/app.php';
-
-          // Bind public path to public_html (/home/plaschem/public_html)
-          $app->usePublicPath(__DIR__);
-
-          $app->handleRequest(Request::capture());
-          EOF
+          # 5. Ensure public_html/index.php matches public/index.php
+          cp public/index.php deploy_staging/public_html/index.php
 
           echo "Deployment staging structure prepared successfully:"
           ls -la deploy_staging
