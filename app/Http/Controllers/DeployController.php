@@ -167,28 +167,64 @@ class DeployController extends Controller
 
     /**
      * Create public storage link with fallback to native symlink.
+     * Avoids Artisan storage:link which calls exec() — commonly disabled on shared hosting.
      */
     private function ensureStorageLink(): string
     {
         $publicStorage = public_path('storage');
         $appPublic = storage_path('app/public');
 
-        if (is_link($publicStorage) || file_exists($publicStorage)) {
-            return "Storage link already exists at: {$publicStorage}\n";
+        if (is_link($publicStorage)) {
+            return "Storage symlink already exists at: {$publicStorage}\n";
         }
 
-        try {
-            Artisan::call('storage:link');
+        if (file_exists($publicStorage) && ! is_link($publicStorage)) {
+            return "Storage path exists but is not a symlink: {$publicStorage}\nManually remove it then retry.\n";
+        }
 
-            return Artisan::output();
-        } catch (\Throwable $e) {
-            if (function_exists('symlink')) {
-                if (@symlink($appPublic, $publicStorage)) {
-                    return "Created storage symlink via PHP symlink():\n{$publicStorage} -> {$appPublic}\n";
-                }
+        // Try PHP native symlink() first — works without exec() being enabled
+        if (function_exists('symlink')) {
+            if (@symlink($appPublic, $publicStorage)) {
+                return "✅ Created storage symlink via PHP symlink():\n{$publicStorage} -> {$appPublic}\n";
             }
 
-            return "Could not create storage link: {$e->getMessage()}\nTarget: {$appPublic}\nLink: {$publicStorage}\n";
+            $phpError = error_get_last();
+            $phpErrorMsg = $phpError ? $phpError['message'] : 'unknown error';
+
+            // symlink() exists but failed — try Artisan as secondary fallback
+            try {
+                Artisan::call('storage:link');
+
+                return "✅ Created storage symlink via Artisan:\n".Artisan::output();
+            } catch (\Throwable $e) {
+                // Both failed — provide manual instructions
+                return implode("\n", [
+                    '⚠️ Could not create storage symlink automatically.',
+                    '   PHP symlink() error: '.$phpErrorMsg,
+                    '   Artisan error: '.$e->getMessage(),
+                    '',
+                    'Manual fix options:',
+                    '  Option A — cPanel File Manager:',
+                    '    1. Go to File Manager → public_html',
+                    "    2. Click 'New Folder', then delete it and use the Symlink option instead.",
+                    '       (Some cPanel themes: Tools → Symlinks, or use the Terminal below.)',
+                    '',
+                    '  Option B — Add a one-time cPanel Cron Job:',
+                    "    Command: ln -s {$appPublic} {$publicStorage}",
+                    '    Schedule: once (1 minute from now), then delete.',
+                    '',
+                    '  Option C — Only needed for file downloads/uploads from storage disk.',
+                    '    If your site has no user-uploaded files yet, it may work without the link.',
+                ]);
+            }
         }
+
+        return implode("\n", [
+            '⚠️ PHP symlink() function is not available on this server.',
+            '',
+            'Manual fix: In cPanel, add a one-time cron job:',
+            "  ln -s {$appPublic} {$publicStorage}",
+            'Then delete the cron job.',
+        ]);
     }
 }
