@@ -151,10 +151,18 @@ jobs:
             **/plaschema/storage/logs/*.log
 
       - name: Run Remote Migrations & Optimizations (Optional)
-        if: ${{ secrets.DEPLOY_KEY != '' && secrets.APP_URL != '' }}
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
+          if [ -z "$APP_URL" ] || [ -z "$DEPLOY_KEY" ]; then
+            echo "Skipping automatic post-deploy tasks: APP_URL or DEPLOY_KEY secret is not configured."
+            echo "You can run migrations and optimizations manually via https://yourdomain.com/_deploy?key=YOUR_KEY"
+            exit 0
+          fi
+
           echo "Triggering post-deploy migrations via secure endpoint..."
-          RESPONSE=$(curl -s -S -X POST "${{ secrets.APP_URL }}/_deploy/run" \
-            -H "X-Deploy-Key: ${{ secrets.DEPLOY_KEY }}" \
+          RESPONSE=$(curl -s -S -X POST "${APP_URL}/_deploy/run" \
+            -H "X-Deploy-Key: ${DEPLOY_KEY}" \
             -d "action=all" || true)
           echo "Server response: $RESPONSE"
